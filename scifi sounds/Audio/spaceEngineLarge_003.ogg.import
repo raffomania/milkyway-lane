@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://b6hsy7gxdi254"
+path="res://.godot/imported/spaceEngineLarge_003.ogg-c84da85c36b574a5ee000592fb02981f.oggvorbisstr"
+
+[deps]
+
+source_file="res://scifi sounds/Audio/spaceEngineLarge_003.ogg"
+dest_files=["res://.godot/imported/spaceEngineLarge_003.ogg-c84da85c36b574a5ee000592fb02981f.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

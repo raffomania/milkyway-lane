@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c7n5alv48vveo"
+path="res://.godot/imported/doorOpen_001.ogg-617fe84c9352fbc700e4737fdfbbefa7.oggvorbisstr"
+
+[deps]
+
+source_file="res://scifi sounds/Audio/doorOpen_001.ogg"
+dest_files=["res://.godot/imported/doorOpen_001.ogg-617fe84c9352fbc700e4737fdfbbefa7.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
