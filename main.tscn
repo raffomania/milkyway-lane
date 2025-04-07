@@ -1,16 +1,16 @@
 [gd_scene load_steps=9 format=3 uid="uid://c53jdqfk7w18k"]
 
-[ext_resource type="Texture2D" uid="uid://3w1w47b355d1" path="res://planets/Planets/planet01.png" id="1_0xm2m"]
-[ext_resource type="Script" uid="uid://cnmoyss5wumlu" path="res://planet.gd" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://c8f45ju8dy8s3" path="res://planet.tscn" id="2_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://dppbwfk7t7dfr" path="res://planets/Planets/planet00.png" id="2_5vw27"]
 [ext_resource type="Texture2D" uid="uid://10givwqxoynk" path="res://planets/Planets/planet02.png" id="3_1bvp3"]
-[ext_resource type="Texture2D" uid="uid://wy4wmhkekdwm" path="res://planets/Planets/planet04.png" id="4_lquwl"]
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
-[ext_resource type="Texture2D" uid="uid://cb4u0hb6w0l7" path="res://simple space/PNG/Default/ship_G.png" id="6_272bh"]
-[ext_resource type="Script" uid="uid://ccjo31mdbmudr" path="res://ship.gd" id="7_5vw27"]
+[ext_resource type="Texture2D" uid="uid://buc60npxar7i1" path="res://planets/Planets/planet05.png" id="6_5vw27"]
+[ext_resource type="PackedScene" uid="uid://cs4ip8vffa4es" path="res://ship.tscn" id="7_5vw27"]
+[ext_resource type="PackedScene" uid="uid://bwtseicc2lvkk" path="res://ore.tscn" id="7_272bh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
 shader = ExtResource("5_lquwl")
-shader_parameter/cell_size = 16.0
+shader_parameter/cell_size = 20.0
 shader_parameter/dot_size = 0.25
 shader_parameter/background_color = Color(0.117647, 0.117647, 0.117647, 0)
 shader_parameter/dot_color = Color(0.2156, 0.2156, 0.2156, 1)
@@ -26,47 +26,37 @@ material = SubResource("ShaderMaterial_7mycd")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -11.0
-offset_top = -26.0
-offset_right = 1173.0
-offset_bottom = 640.0
+offset_left = -4.0
+offset_top = 6.0
+offset_right = 1943.0
+offset_bottom = 1104.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Planet01" type="Sprite2D" parent="." node_paths=PackedStringArray("target")]
-position = Vector2(202, 229)
-scale = Vector2(0.0890625, 0.0890625)
-texture = ExtResource("1_0xm2m")
-script = ExtResource("2_h2yge")
+[node name="Planet01" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+position = Vector2(528, 333)
 target = NodePath("../Planet02")
+texture = ExtResource("2_5vw27")
+radius = 120.0
+spawning_resource = ExtResource("7_272bh")
+output_slots = 4
+input_slots = 3
 
-[node name="Planet02" type="Sprite2D" parent="." node_paths=PackedStringArray("target")]
-position = Vector2(800.5, 174.5)
-scale = Vector2(0.0648437, 0.0648437)
-texture = ExtResource("3_1bvp3")
-script = ExtResource("2_h2yge")
+[node name="Planet02" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+position = Vector2(1200, 454)
 target = NodePath("../Planet03")
+texture = ExtResource("3_1bvp3")
+radius = 80.0
+spawning_resource = ExtResource("7_272bh")
+output_slots = null
 
-[node name="Planet03" type="Sprite2D" parent="." node_paths=PackedStringArray("target")]
-position = Vector2(463.25, 418.25)
-scale = Vector2(0.0558593, 0.0558593)
-texture = ExtResource("4_lquwl")
-script = ExtResource("2_h2yge")
+[node name="Planet03" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+position = Vector2(957, 773)
 target = NodePath("../Planet01")
+texture = ExtResource("6_5vw27")
+spawning_ships = ExtResource("7_5vw27")
+output_slots = null
+spawn_time = 5.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(572, 325)
-
-[node name="Ship" type="Sprite2D" parent="." node_paths=PackedStringArray("target")]
-position = Vector2(314, 158)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("6_272bh")
-script = ExtResource("7_5vw27")
-target = NodePath("../Planet03")
-
-[node name="Ship2" type="Sprite2D" parent="." node_paths=PackedStringArray("target")]
-position = Vector2(508, 433)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("6_272bh")
-script = ExtResource("7_5vw27")
-target = NodePath("../Planet03")
+position = Vector2(967, 551)
