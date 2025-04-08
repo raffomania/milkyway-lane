@@ -19,7 +19,7 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="Node2D" type="Node2D"]
+[node name="Main" type="Node2D"]
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_7mycd")
@@ -33,30 +33,38 @@ offset_bottom = 1104.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Planet01" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+[node name="Home" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+position = Vector2(784, 545)
+target = NodePath("../Planet01")
+texture = ExtResource("6_5vw27")
+spawning_ships = ExtResource("7_5vw27")
+spawn_time = 5.0
+
+[node name="Planet01" parent="." node_paths=PackedStringArray("target", "output_slots") instance=ExtResource("2_1bvp3")]
 position = Vector2(528, 333)
 target = NodePath("../Planet02")
 texture = ExtResource("2_5vw27")
 radius = 120.0
 spawning_resource = ExtResource("7_272bh")
-output_slots = 4
+output_slots = [null, null, null, null]
+spawn_time = 2.0
 input_slots = 3
 
 [node name="Planet02" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
 position = Vector2(1200, 454)
-target = NodePath("../Planet03")
+target = NodePath("../Planet04")
 texture = ExtResource("3_1bvp3")
 radius = 80.0
 spawning_resource = ExtResource("7_272bh")
-output_slots = null
+input_slots = 2
 
-[node name="Planet03" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
-position = Vector2(957, 773)
+[node name="Planet04" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+position = Vector2(921, 228)
 target = NodePath("../Planet01")
-texture = ExtResource("6_5vw27")
-spawning_ships = ExtResource("7_5vw27")
-output_slots = null
-spawn_time = 5.0
+texture = ExtResource("3_1bvp3")
+radius = 80.0
+spawning_resource = ExtResource("7_272bh")
+input_slots = 3
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(967, 551)

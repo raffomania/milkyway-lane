@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://bwtseicc2lvkk"]
 
 [ext_resource type="Texture2D" uid="uid://tkxahyabof11" path="res://simple space/PNG/Default/meteor_small.png" id="1_r2ayp"]
-[ext_resource type="Script" uid="uid://cnv060qp8qab7" path="res://resource.gd" id="2_bif65"]
+[ext_resource type="Script" uid="uid://d1bco0wr5p4wn" path="res://cargo.gd" id="2_r2ayp"]
 
 [node name="Ore" type="Sprite2D"]
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("1_r2ayp")
-script = ExtResource("2_bif65")
-decay_time = 10.0
+script = ExtResource("2_r2ayp")
+decay_time = 20.0

@@ -3,8 +3,13 @@
 [ext_resource type="Texture2D" uid="uid://cb4u0hb6w0l7" path="res://simple space/PNG/Default/ship_G.png" id="1_4cq66"]
 [ext_resource type="Script" uid="uid://ccjo31mdbmudr" path="res://ship.gd" id="2_v4325"]
 
-[node name="Ship" type="Sprite2D"]
+[node name="Ship" type="Node2D"]
+script = ExtResource("2_v4325")
+time_to_live = 60.0
+
+[node name="Sprite" type="Sprite2D" parent="."]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_4cq66")
-script = ExtResource("2_v4325")
-time_to_live = 5.0
+
+[node name="CargoHold" type="Node2D" parent="."]
+position = Vector2(0, 22)
