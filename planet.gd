@@ -3,11 +3,7 @@ class_name Planet
 extends Node2D
 
 @export
-var target: Planet:
-    set(val):
-        target = val
-        if val == self:
-            push_warning(val, " has itself as target")
+var targets: Array[Planet]
 
 @export
 var texture: Texture2D:
@@ -32,10 +28,14 @@ var output_slots: Array[Cargo] = []
 var spawn_time := 15.0
 @export
 var input_slots := 0
+@export
+var target_line_color: Color
 var inputs_added := 0
 var current_inputs := 0
 
-var slot_size = 8.0
+var targets_lines: Array[PackedVector2Array]
+
+var slot_size := 12.0
 
 func _ready() -> void:
     add_to_group("planets")
@@ -46,6 +46,18 @@ func _ready() -> void:
     add_child(spawn_timer)
     spawn_timer.start()
 
+    for target in targets:
+        var line = Curve2D.new()
+        var local_target_pos = to_local(target.global_position)
+        var distance = local_target_pos.length()
+        var perpendicular_angle = local_target_pos.angle() + PI * .5
+        var start = Vector2.RIGHT.rotated(local_target_pos.angle() - PI * .05) * (radius + slot_size * 3)
+        var end = local_target_pos + Vector2.LEFT.rotated(local_target_pos.angle() - PI * .05) * (target.radius + target.slot_size * 3)
+        var control = local_target_pos.normalized() * distance * .15 + Vector2.LEFT.rotated(perpendicular_angle) * distance * .02
+        line.add_point(start, Vector2.ZERO, control)
+        line.add_point(end, control.rotated(PI), Vector2.ZERO)
+        targets_lines.append(line.tessellate(4, 1))
+
     spawn.call_deferred()
 
 func _draw() -> void:
@@ -54,6 +66,18 @@ func _draw() -> void:
 
     for i in range(input_slots):
         draw_circle(slot_position(i).rotated(PI), slot_size, Color.GRAY, false)
+
+    var line_width = 5
+    for lines in targets_lines:
+        if !lines.is_empty():
+            draw_circle(lines[0], line_width * .5, target_line_color, true, -1, true)
+        for i in range(len(lines) - 1):
+            draw_line(lines[i], lines[i + 1], target_line_color, line_width, true)
+            if i == (len(lines) - 2):
+                var arrow_line_end = (lines[i] - lines[i + 1]).normalized() * line_width * 2
+                draw_line(lines[i + 1], lines[i + 1] + arrow_line_end.rotated(PI * .2), target_line_color, line_width, true)
+                draw_line(lines[i + 1], lines[i + 1] + arrow_line_end.rotated(-PI * .2), target_line_color, line_width, true)
+                draw_circle(lines[i + 1], line_width * .5, target_line_color, true, -1, true)
 
 func slot_position(i: int) -> Vector2:
     return (Vector2.RIGHT).rotated(i / radius * slot_size * 3) * radius
@@ -120,9 +144,15 @@ func spawn_ship() -> void:
         return
 
     var ship: Node2D = spawning_ships.instantiate()
-    ship.target = self.target
+    ship.target = self.random_target()
     get_node("/root/Main").add_child(ship)
     ship.global_position = global_position
+
+func random_target() -> Planet:
+    if targets.is_empty():
+        return
+
+    return targets.pick_random()
 
 func remove_output(cargo: Cargo) -> void:
     output_slots[output_slots.find(cargo)] = null

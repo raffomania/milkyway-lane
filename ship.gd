@@ -78,7 +78,7 @@ func on_reach_target() -> void:
             cargo.removed.connect(self.cargo_expired)
             cargo.reparent(get_node("/root/Main"))
 
-    target = target.target
+    target = target.random_target()
 
 
 func cargo_expired(_c: Cargo) -> void:

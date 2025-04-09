@@ -6,7 +6,7 @@
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
 [ext_resource type="Texture2D" uid="uid://buc60npxar7i1" path="res://planets/Planets/planet05.png" id="6_5vw27"]
 [ext_resource type="PackedScene" uid="uid://cs4ip8vffa4es" path="res://ship.tscn" id="7_5vw27"]
-[ext_resource type="PackedScene" uid="uid://bwtseicc2lvkk" path="res://ore.tscn" id="7_272bh"]
+[ext_resource type="PackedScene" uid="uid://bwtseicc2lvkk" path="res://energy.tscn" id="7_272bh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
 shader = ExtResource("5_lquwl")
@@ -33,34 +33,29 @@ offset_bottom = 1104.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Home" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+[node name="Home" parent="." instance=ExtResource("2_1bvp3")]
 position = Vector2(784, 545)
-target = NodePath("../Planet01")
 texture = ExtResource("6_5vw27")
 spawning_ships = ExtResource("7_5vw27")
 spawn_time = 5.0
 
-[node name="Planet01" parent="." node_paths=PackedStringArray("target", "output_slots") instance=ExtResource("2_1bvp3")]
+[node name="Planet01" parent="." instance=ExtResource("2_1bvp3")]
 position = Vector2(528, 333)
-target = NodePath("../Planet02")
 texture = ExtResource("2_5vw27")
 radius = 120.0
 spawning_resource = ExtResource("7_272bh")
-output_slots = [null, null, null, null]
 spawn_time = 2.0
 input_slots = 3
 
-[node name="Planet02" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+[node name="Planet02" parent="." instance=ExtResource("2_1bvp3")]
 position = Vector2(1200, 454)
-target = NodePath("../Planet04")
 texture = ExtResource("3_1bvp3")
 radius = 80.0
 spawning_resource = ExtResource("7_272bh")
 input_slots = 2
 
-[node name="Planet04" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1bvp3")]
+[node name="Planet04" parent="." instance=ExtResource("2_1bvp3")]
 position = Vector2(921, 228)
-target = NodePath("../Planet01")
 texture = ExtResource("3_1bvp3")
 radius = 80.0
 spawning_resource = ExtResource("7_272bh")

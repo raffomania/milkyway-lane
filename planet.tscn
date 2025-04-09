@@ -4,8 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://dppbwfk7t7dfr" path="res://planets/Planets/planet00.png" id="2_a75xc"]
 
 [node name="Planet01" type="Node2D"]
+z_index = 1
 script = ExtResource("1_mtr83")
+target_line_color = Color(0.91, 0.781083, 0.6825, 1)
 
 [node name="Sprite" type="Sprite2D" parent="."]
+z_index = -1
 scale = Vector2(0.166906, 0.166906)
 texture = ExtResource("2_a75xc")
