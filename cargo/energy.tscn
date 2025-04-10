@@ -3,7 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://8yaob70cb6oc" path="res://cargo/energy.svg" id="1_r2ayp"]
 [ext_resource type="Script" uid="uid://d1bco0wr5p4wn" path="res://cargo.gd" id="2_r2ayp"]
 
-[node name="Ore" type="Sprite2D"]
+[node name="Energy" type="Sprite2D"]
 z_index = 2
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_r2ayp")
 script = ExtResource("2_r2ayp")
+type = 1

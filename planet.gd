@@ -2,8 +2,8 @@ class_name Planet
 
 extends Node2D
 
-@export
-var targets: Array[Planet]
+@onready
+var directives: Array[Directive] = child_directives()
 
 @export
 var texture: Texture2D:
@@ -27,13 +27,10 @@ var output_slots: Array[Cargo] = []
 @export
 var spawn_time := 15.0
 @export
-var input_slots := 0
+var consume_time := 10.0
 @export
-var target_line_color: Color
-var inputs_added := 0
-var current_inputs := 0
-
-var targets_lines: Array[PackedVector2Array]
+var input_slots: Array[Cargo.Type] = []
+var current_inputs: Array[Cargo] = []
 
 var slot_size := 12.0
 
@@ -46,55 +43,60 @@ func _ready() -> void:
     add_child(spawn_timer)
     spawn_timer.start()
 
-    for target in targets:
-        var line = Curve2D.new()
-        var local_target_pos = to_local(target.global_position)
-        var distance = local_target_pos.length()
-        var perpendicular_angle = local_target_pos.angle() + PI * .5
-        var start = Vector2.RIGHT.rotated(local_target_pos.angle() - PI * .05) * (radius + slot_size * 3)
-        var end = local_target_pos + Vector2.LEFT.rotated(local_target_pos.angle() - PI * .05) * (target.radius + target.slot_size * 3)
-        var control = local_target_pos.normalized() * distance * .15 + Vector2.LEFT.rotated(perpendicular_angle) * distance * .02
-        line.add_point(start, Vector2.ZERO, control)
-        line.add_point(end, control.rotated(PI), Vector2.ZERO)
-        targets_lines.append(line.tessellate(4, 1))
+    var consume_timer = Timer.new()
+    consume_timer.wait_time = consume_time
+    consume_timer.timeout.connect(self.consume_input)
+    add_child(consume_timer)
+    consume_timer.start()
+
+    current_inputs.resize(len(input_slots))
 
     spawn.call_deferred()
+    await get_tree().create_timer(0.2).timeout
+    spawn.call_deferred()
+    await get_tree().create_timer(0.2).timeout
+    spawn.call_deferred()
+    await get_tree().create_timer(0.2).timeout
+    spawn.call_deferred()
+
+func child_directives() -> Array[Directive]:
+    var result: Array[Directive] = []
+    for child in get_children():
+        var directive := child as Directive
+        if directive != null:
+            result.append(directive)
+
+    return result
 
 func _draw() -> void:
-    for i in range(len(output_slots)):
-        draw_circle(slot_position(i), slot_size, Color.GRAY, false)
-
-    for i in range(input_slots):
+    # for i in range(len(output_slots)):
+    #     draw_circle(slot_position(i), slot_size, Color.GRAY, false)
+    for i in range(len(input_slots)):
         draw_circle(slot_position(i).rotated(PI), slot_size, Color.GRAY, false)
 
-    var line_width = 5
-    for lines in targets_lines:
-        if !lines.is_empty():
-            draw_circle(lines[0], line_width * .5, target_line_color, true, -1, true)
-        for i in range(len(lines) - 1):
-            draw_line(lines[i], lines[i + 1], target_line_color, line_width, true)
-            if i == (len(lines) - 2):
-                var arrow_line_end = (lines[i] - lines[i + 1]).normalized() * line_width * 2
-                draw_line(lines[i + 1], lines[i + 1] + arrow_line_end.rotated(PI * .2), target_line_color, line_width, true)
-                draw_line(lines[i + 1], lines[i + 1] + arrow_line_end.rotated(-PI * .2), target_line_color, line_width, true)
-                draw_circle(lines[i + 1], line_width * .5, target_line_color, true, -1, true)
-
 func slot_position(i: int) -> Vector2:
-    return (Vector2.RIGHT).rotated(i / radius * slot_size * 3) * radius
+    return (Vector2.RIGHT).rotated(i / radius * slot_size * 3) * (radius + slot_size / 2)
 
 func output_dock_position() -> Vector2:
     var i = (len(output_slots) - 1) * .5
     return (Vector2.RIGHT).rotated(i / radius * slot_size * 3) * radius * 1.4
 
 func input_dock_position() -> Vector2:
-    var i = (input_slots - 1) * .5
+    var i = (len(input_slots) - 1) * .5
     return (Vector2.RIGHT).rotated(PI + (i / radius * slot_size * 3)) * radius * 1.4
 
 func spawn() -> void:
     if spawning_resource != null:
         spawn_output()
-    elif spawning_ships != null:
+    if spawning_ships != null:
         spawn_ship()
+
+func consume_input() -> void:
+    var available = current_inputs.filter(func(i): return i != null)
+    if !available.is_empty():
+        var cargo = available.pick_random()
+        cargo.remove()
+        remove_input(cargo)
 
 func spawn_output() -> void:
     var free_slot = find_free_output_slot()
@@ -105,64 +107,83 @@ func spawn_output() -> void:
     output.global_target_position = to_global(slot_position(free_slot))
     output.rotation = output.position.angle()
     output.removed.connect(remove_output)
-    add_child(output)
+    output.position = global_position
+    get_node("/root/Main").add_child(output)
     output_slots[free_slot] = output
+
 
 func find_free_output_slot() -> int:
     return output_slots.find_custom(func(o): return o == null)
 
-func find_output() -> Cargo:
-    var index = output_slots.find_custom(func(o): return o != null)
+func random_transportable_output() -> Cargo:
+    var available_outputs = output_slots.filter(func(o):
+        if o == null:
+            return false
+        var directive_available = directives.any(func(d): return d.includes_cargo_type(o.type))
+        return directive_available
+    )
 
-    if index != -1:
-        return output_slots[index]
+    if !available_outputs.is_empty():
+        return available_outputs.pick_random()
     else:
         return null
 
-func can_take_input() -> bool:
-    return current_inputs < input_slots
+func free_input_slot(type: Cargo.Type) -> int:
+    for i in range(len(input_slots)):
+        if input_slots[i] == type:
+            if current_inputs[i] == null:
+                return i
+    
+    return -1
+
+func can_take_input(type: Cargo.Type) -> bool:
+    return free_input_slot(type) != -1
 
 func add_input(input: Node2D) -> void:
-    if !can_take_input():
+    var free_slot = free_input_slot(input.type)
+    if free_slot == -1:
         return
 
-    if input.get_parent() != null:
-        input.reparent(self)
-    else:
-        add_child(input)
-
-    var free_slot = inputs_added % input_slots
     input.global_target_position = to_global(slot_position(free_slot).rotated(PI))
-    input.rotation = input.position.angle()
     input.removed.connect(remove_input)
 
-    inputs_added += 1
-    current_inputs += 1
+    current_inputs[free_slot] = input
 
 func spawn_ship() -> void:
     if spawning_ships == null:
         return
 
     var ship: Node2D = spawning_ships.instantiate()
-    ship.target = self.random_target()
     get_node("/root/Main").add_child(ship)
     ship.global_position = global_position
+    ship.state = ship.Moving.new()
+    ship.state.target = self
+    ship.check_target()
 
 func random_target() -> Planet:
-    if targets.is_empty():
-        return
+    if len(directives) == 0:
+        return null
 
-    return targets.pick_random()
+    return directives.pick_random().planet
+
+func target_for_cargo(type: Cargo.Type) -> Planet:
+    var available = directives.filter(func(d: Directive): return d.includes_cargo_type(type))
+    if !available.is_empty():
+        return available.pick_random().planet
+
+    return null
 
 func remove_output(cargo: Cargo) -> void:
     output_slots[output_slots.find(cargo)] = null
     cargo.removed.disconnect(self.remove_output)
 
-func remove_input(_cargo: Cargo) -> void:
-    current_inputs -= 1
+func remove_input(cargo: Cargo) -> void:
+    var i = current_inputs.find(cargo)
+    if i != -1:
+        current_inputs[i] = null
 
 func take_output() -> Cargo:
-    var output = find_output()
+    var output = random_transportable_output()
     if output == null:
         return null
 

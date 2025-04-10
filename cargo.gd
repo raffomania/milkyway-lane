@@ -8,6 +8,14 @@ enum Type {
     Food
 }
 
+static func texture_for_type(cargo_type: Cargo.Type) -> Texture2D:
+    match cargo_type:
+        Type.Ore: return preload("res://cargo/metal.svg")
+        Type.Fuel: return preload("res://cargo/energy.svg")
+        Type.Food: return preload("res://cargo/energy.svg")
+
+    return preload("res://simple space/PNG/Retina/icon_crossSmall.png")
+
 signal removed(cargo: Cargo)
 
 @export
@@ -34,7 +42,7 @@ func _process(delta: float) -> void:
     #     var l = .5 + decay_time / 10.0
     #     modulate = Color(l, l, l, 1)
     if global_target_position != null:
-        global_position = global_position.lerp(global_target_position, delta * 4)
+        global_position = global_position.lerp(global_target_position, delta * 8)
 
 func remove() -> void:
     var tween = create_tween()

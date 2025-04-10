@@ -6,7 +6,7 @@
 [node name="Planet01" type="Node2D"]
 z_index = 1
 script = ExtResource("1_mtr83")
-target_line_color = Color(0.91, 0.781083, 0.6825, 1)
+target_line_color = Color(0.5952, 0.85188, 0.93, 1)
 
 [node name="Sprite" type="Sprite2D" parent="."]
 z_index = -1
