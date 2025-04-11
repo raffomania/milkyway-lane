@@ -7,7 +7,7 @@
    viewBox="0 0 10 10"
    version="1.1"
    id="svg1"
-   sodipodi:docname="lightning.svg"
+   sodipodi:docname="energy.svg"
    inkscape:version="1.4.1 (93de688d07, 2025-03-30)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,14 +24,15 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="11.313708"
-     inkscape:cx="6.6733203"
-     inkscape:cy="4.8613591"
+     inkscape:cx="6.6733205"
+     inkscape:cy="4.8613593"
      inkscape:window-width="2510"
      inkscape:window-height="1364"
      inkscape:window-x="25"
      inkscape:window-y="51"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     showgrid="false" />
   <defs
      id="defs1" />
   <g
@@ -40,7 +41,7 @@
      id="layer1">
     <path
        style="fill:#f5cd40;fill-opacity:1;stroke:#f5cd40;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-       d="M 4.9521002,0.90085596 C 4.2539709,2.5795356 3.5558417,4.2582153 2.8577124,5.9368949 3.6717867,5.8092484 4.4858611,5.6816018 5.2999354,5.5539553 5.3106421,6.6426985 5.3213489,7.7314417 5.3320556,8.8201849 6.0507868,7.2556459 6.7695181,5.6911068 7.4882493,4.1265678 6.575359,4.3010639 5.6624687,4.4755599 4.7495784,4.650056 4.8170857,3.4003227 4.8845929,2.1505893 4.9521002,0.90085596 Z"
+       d="M 4.8313982,1.9064953 C 4.2984918,3.2282445 3.7655854,4.5499937 3.232679,5.8717428 3.8540903,5.7712372 4.4755016,5.6707316 5.0969129,5.570226 5.1050857,6.4274744 5.1132586,7.2847228 5.1214314,8.1419711 5.6700639,6.9100934 6.2186965,5.6782156 6.7673291,4.4463378 6.0704881,4.5837315 5.3736472,4.7211252 4.6768062,4.8585189 4.7283369,3.8745111 4.7798675,2.8905032 4.8313982,1.9064953 Z"
        id="path1" />
   </g>
 </svg>

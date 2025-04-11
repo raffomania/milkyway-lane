@@ -2,9 +2,6 @@ class_name Planet
 
 extends Node2D
 
-@onready
-var directives: Array[Directive] = child_directives()
-
 @export
 var texture: Texture2D:
     set(val):
@@ -18,30 +15,63 @@ var radius := 50.0:
         $Sprite.scale = Vector2.ONE * (2 * radius / texture.get_size().x)
         queue_redraw()
 
-@export
-var spawning_resource: PackedScene
-@export
-var spawning_ships: PackedScene
-@export
-var output_slots: Array[Cargo] = []
+@export_group("output")
 @export
 var spawn_time := 15.0
+@export
+var spawning_cargo_type: Cargo.MaybeType
+@export
+var output_slots: int = 0
+@export
+var ship_count: int = 0
+@export_group("input")
 @export
 var consume_time := 10.0
 @export
 var input_slots: Array[Cargo.Type] = []
 var current_inputs: Array[Cargo] = []
 
-var slot_size := 12.0
+const slot_size := 35.0
+
+@onready
+var directives: Array[Directive] = child_directives()
+@onready
+var arrow_width = $"Arrow".texture.get_size().x * $"Arrow".scale.x
+
+var current_outputs: Array[Cargo] = []
+var current_spawn_time := spawn_time
 
 func _ready() -> void:
     add_to_group("planets")
 
-    var spawn_timer = Timer.new()
-    spawn_timer.wait_time = spawn_time
-    spawn_timer.timeout.connect(self.spawn)
-    add_child(spawn_timer)
-    spawn_timer.start()
+    for i in range(len(input_slots)):
+        var slot = preload("res://cargo/cargo_outline.tscn").instantiate()
+        slot.type = input_slots[i]
+        slot.outline_color = Color.WHITE
+        slot.position = input_slot_position(i)
+        add_child(slot)
+
+
+    var output_type = Cargo.maybe_type_to_type(spawning_cargo_type)
+    if output_type != null:
+        for i in range(output_slots):
+            var output_indicator = preload("res://cargo/cargo_outline.tscn").instantiate()
+            output_indicator.type = output_type
+            output_indicator.position = output_slot_position(i)
+            add_child(output_indicator)
+    else:
+        if output_slots > 0:
+            push_error(self, " has ", output_slots, " output slots but cargo type is not set")
+
+    if input_slots.is_empty() and output_slots == 0:
+        $Arrow.hide()
+
+    if ship_count > 0:
+        var ship_timer = Timer.new()
+        ship_timer.wait_time = Ship.max_lifetime / ship_count
+        ship_timer.timeout.connect(func(): self.spawn_ship(Ship.max_lifetime))
+        add_child(ship_timer)
+        ship_timer.start()
 
     var consume_timer = Timer.new()
     consume_timer.wait_time = consume_time
@@ -50,14 +80,23 @@ func _ready() -> void:
     consume_timer.start()
 
     current_inputs.resize(len(input_slots))
+    current_outputs.resize(output_slots)
 
-    spawn.call_deferred()
-    await get_tree().create_timer(0.2).timeout
-    spawn.call_deferred()
-    await get_tree().create_timer(0.2).timeout
-    spawn.call_deferred()
-    await get_tree().create_timer(0.2).timeout
-    spawn.call_deferred()
+    await get_tree().create_timer(0.1).timeout
+    for i in range(ship_count):
+        spawn_ship((i + 1) * Ship.max_lifetime / ship_count)
+        await get_tree().create_timer(1.0).timeout
+
+    spawn_output.call_deferred()
+
+func _process(delta: float) -> void:
+    var spawn_speed_factor = 1 + len(current_inputs)
+    current_spawn_time -= delta * spawn_speed_factor
+
+    if current_spawn_time <= 0.0:
+        spawn_output()
+        current_spawn_time = spawn_time
+    
 
 func child_directives() -> Array[Directive]:
     var result: Array[Directive] = []
@@ -68,28 +107,13 @@ func child_directives() -> Array[Directive]:
 
     return result
 
-func _draw() -> void:
-    # for i in range(len(output_slots)):
-    #     draw_circle(slot_position(i), slot_size, Color.GRAY, false)
-    for i in range(len(input_slots)):
-        draw_circle(slot_position(i).rotated(PI), slot_size, Color.GRAY, false)
+func output_slot_position(i: int) -> Vector2:
+    var mid = (output_slots - 1) * .5
+    return Vector2((arrow_width + slot_size) / 2, slot_size * (mid - i))
 
-func slot_position(i: int) -> Vector2:
-    return (Vector2.RIGHT).rotated(i / radius * slot_size * 3) * (radius + slot_size / 2)
-
-func output_dock_position() -> Vector2:
-    var i = (len(output_slots) - 1) * .5
-    return (Vector2.RIGHT).rotated(i / radius * slot_size * 3) * radius * 1.4
-
-func input_dock_position() -> Vector2:
-    var i = (len(input_slots) - 1) * .5
-    return (Vector2.RIGHT).rotated(PI + (i / radius * slot_size * 3)) * radius * 1.4
-
-func spawn() -> void:
-    if spawning_resource != null:
-        spawn_output()
-    if spawning_ships != null:
-        spawn_ship()
+func input_slot_position(i: int) -> Vector2:
+    var mid = (len(input_slots) - 1) * .5
+    return Vector2(- (arrow_width + slot_size) / 2, slot_size * (mid - i))
 
 func consume_input() -> void:
     var available = current_inputs.filter(func(i): return i != null)
@@ -99,24 +123,28 @@ func consume_input() -> void:
         remove_input(cargo)
 
 func spawn_output() -> void:
-    var free_slot = find_free_output_slot()
-    if spawning_resource == null or free_slot == -1:
+    var type = Cargo.maybe_type_to_type(spawning_cargo_type)
+    if type == null:
         return
 
-    var output: Node2D = spawning_resource.instantiate()
-    output.global_target_position = to_global(slot_position(free_slot))
-    output.rotation = output.position.angle()
+    var free_slot = find_free_output_slot()
+    if free_slot == -1:
+        return
+
+    var output: Node2D = preload("res://cargo/cargo.tscn").instantiate()
+    output.type = type
+    output.global_position = global_position
+    output.global_target_position = to_global(output_slot_position(free_slot))
     output.removed.connect(remove_output)
-    output.position = global_position
     get_node("/root/Main").add_child(output)
-    output_slots[free_slot] = output
+    current_outputs[free_slot] = output
 
 
 func find_free_output_slot() -> int:
-    return output_slots.find_custom(func(o): return o == null)
+    return current_outputs.find_custom(func(o): return o == null)
 
 func random_transportable_output() -> Cargo:
-    var available_outputs = output_slots.filter(func(o):
+    var available_outputs = current_outputs.filter(func(o):
         if o == null:
             return false
         var directive_available = directives.any(func(d): return d.includes_cargo_type(o.type))
@@ -144,20 +172,21 @@ func add_input(input: Node2D) -> void:
     if free_slot == -1:
         return
 
-    input.global_target_position = to_global(slot_position(free_slot).rotated(PI))
+    input.global_target_position = to_global(input_slot_position(free_slot))
     input.removed.connect(remove_input)
 
     current_inputs[free_slot] = input
 
-func spawn_ship() -> void:
-    if spawning_ships == null:
+func spawn_ship(time_to_live: float) -> void:
+    if ship_count <= 0:
         return
 
-    var ship: Node2D = spawning_ships.instantiate()
-    get_node("/root/Main").add_child(ship)
+    var ship: Node2D = preload("res://ship.tscn").instantiate()
     ship.global_position = global_position
     ship.state = ship.Moving.new()
     ship.state.target = self
+    ship.time_to_live = time_to_live
+    get_node("/root/Main").add_child(ship)
     ship.check_target()
 
 func random_target() -> Planet:
@@ -174,7 +203,7 @@ func target_for_cargo(type: Cargo.Type) -> Planet:
     return null
 
 func remove_output(cargo: Cargo) -> void:
-    output_slots[output_slots.find(cargo)] = null
+    current_outputs[current_outputs.find(cargo)] = null
     cargo.removed.disconnect(self.remove_output)
 
 func remove_input(cargo: Cargo) -> void:

@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://bfbx0niklmy36"]
+
+[ext_resource type="Shader" uid="uid://lwgs7jxyqsdq" path="res://outline.gdshader" id="1_hkh4e"]
+[ext_resource type="Texture2D" uid="uid://8yaob70cb6oc" path="res://cargo/energy.svg" id="2_jerui"]
+[ext_resource type="Script" uid="uid://0ir3fy6ffoeq" path="res://cargo/cargo_sprite.gd" id="3_8gwn4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_whgle"]
+shader = ExtResource("1_hkh4e")
+shader_parameter/thickness = 4.0
+shader_parameter/ring_count = 16
+shader_parameter/ring_offset = 0.0
+shader_parameter/outline_color = Color(0.09, 0.09, 0.09, 1)
+shader_parameter/border_clipping_fix = true
+shader_parameter/aspect_ratio = 1.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/max_or_add = false
+shader_parameter/only_outline = 1.0
+
+[node name="CargoOutline" type="Sprite2D"]
+z_index = 2
+material = SubResource("ShaderMaterial_whgle")
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_jerui")
+script = ExtResource("3_8gwn4")

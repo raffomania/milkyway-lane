@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://ccjo31mdbmudr" path="res://ship.gd" id="2_v4325"]
 
 [node name="Ship" type="Node2D"]
-z_index = 2
+z_index = 3
 script = ExtResource("2_v4325")
 time_to_live = 60.0
 

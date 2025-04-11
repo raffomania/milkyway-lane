@@ -1,14 +1,20 @@
-[gd_scene load_steps=11 format=3 uid="uid://c53jdqfk7w18k"]
+[gd_scene load_steps=13 format=3 uid="uid://c53jdqfk7w18k"]
 
 [ext_resource type="PackedScene" uid="uid://c8f45ju8dy8s3" path="res://planet.tscn" id="2_1bvp3"]
+[ext_resource type="Shader" uid="uid://c5vuvvjpvcqi5" path="res://chromatic_aberration.gdshader" id="2_4c57u"]
 [ext_resource type="Texture2D" uid="uid://dppbwfk7t7dfr" path="res://planets/Planets/planet00.png" id="2_5vw27"]
 [ext_resource type="Texture2D" uid="uid://10givwqxoynk" path="res://planets/Planets/planet02.png" id="3_1bvp3"]
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
 [ext_resource type="Texture2D" uid="uid://buc60npxar7i1" path="res://planets/Planets/planet05.png" id="6_5vw27"]
 [ext_resource type="PackedScene" uid="uid://m6ya5gkhhfeg" path="res://directive.tscn" id="6_kek77"]
-[ext_resource type="PackedScene" uid="uid://cs4ip8vffa4es" path="res://ship.tscn" id="7_5vw27"]
-[ext_resource type="PackedScene" uid="uid://bwtseicc2lvkk" path="res://cargo/energy.tscn" id="7_272bh"]
-[ext_resource type="PackedScene" uid="uid://li0olwglo0bh" path="res://cargo/metal.tscn" id="7_kek77"]
+[ext_resource type="Texture2D" uid="uid://b0sikip16xeqr" path="res://planets/Planets/planet07.png" id="9_4c57u"]
+[ext_resource type="Script" uid="uid://dd8i53wevqfkc" path="res://camera.gd" id="9_kek77"]
+[ext_resource type="Texture2D" uid="uid://wy4wmhkekdwm" path="res://planets/Planets/planet04.png" id="10_4c57u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_efxa6"]
+shader = ExtResource("2_4c57u")
+shader_parameter/levels = 3
+shader_parameter/spread = 0.001
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
 shader = ExtResource("5_lquwl")
@@ -23,8 +29,9 @@ shader_parameter/stochastic_samples = 16
 
 [node name="Main" type="Node2D"]
 
-[node name="Grid" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_7mycd")
+[node name="Aberration" type="ColorRect" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_efxa6")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,61 +42,152 @@ offset_bottom = 1104.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Home" parent="." node_paths=PackedStringArray("output_slots") instance=ExtResource("2_1bvp3")]
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(913, 382)
+script = ExtResource("9_kek77")
+
+[node name="Grid" type="ColorRect" parent="Camera2D"]
+material = SubResource("ShaderMaterial_7mycd")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -972.0
+offset_top = -558.0
+offset_right = 975.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="1" type="Node2D" parent="."]
+
+[node name="Home" parent="1" instance=ExtResource("2_1bvp3")]
 position = Vector2(784, 545)
 texture = ExtResource("6_5vw27")
-spawning_ships = ExtResource("7_5vw27")
-output_slots = [null, null, null]
-spawn_time = 5.0
+ship_count = 3
 
-[node name="Directive" parent="Home" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+[node name="Directive" parent="1/Home" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
 planet = NodePath("../../Left")
 
-[node name="Left" parent="." node_paths=PackedStringArray("output_slots") instance=ExtResource("2_1bvp3")]
+[node name="Left" parent="1" instance=ExtResource("2_1bvp3")]
 position = Vector2(528, 333)
 texture = ExtResource("2_5vw27")
 radius = 120.0
-spawning_resource = ExtResource("7_kek77")
-output_slots = [null, null]
-spawn_time = 2.0
+spawn_time = 20.0
+spawning_cargo_type = 1
+output_slots = 2
 
-[node name="Directive3" parent="Left" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+[node name="Directive3" parent="1/Left" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
 planet = NodePath("../../Up")
 cargo_types = Array[int]([0])
 
-[node name="Directive2" parent="Left" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+[node name="Directive2" parent="1/Left" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
 planet = NodePath("../../Right")
 cargo_types = Array[int]([0])
 
-[node name="Right" parent="." node_paths=PackedStringArray("output_slots") instance=ExtResource("2_1bvp3")]
+[node name="Right" parent="1" instance=ExtResource("2_1bvp3")]
 position = Vector2(1200, 454)
 texture = ExtResource("3_1bvp3")
 radius = 80.0
-spawning_resource = ExtResource("7_272bh")
-output_slots = [null, null]
-spawn_time = 10.0
+spawning_cargo_type = 2
+output_slots = 1
 input_slots = Array[int]([0, 0])
 
-[node name="Directive" parent="Right" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+[node name="Directive" parent="1/Right" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
 planet = NodePath("../../Left")
 
-[node name="Directive2" parent="Right" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+[node name="Directive2" parent="1/Right" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
 planet = NodePath("../../Up")
 cargo_types = Array[int]([1, 0])
 
-[node name="Up" parent="." instance=ExtResource("2_1bvp3")]
+[node name="Up" parent="1" instance=ExtResource("2_1bvp3")]
 position = Vector2(921, 228)
 texture = ExtResource("3_1bvp3")
 radius = 80.0
-spawning_resource = ExtResource("7_272bh")
+spawning_cargo_type = 3
+output_slots = 1
 input_slots = Array[int]([0, 1])
 
-[node name="Directive" parent="Up" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+[node name="Directive" parent="1/Up" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
 planet = NodePath("../../Left")
 
-[node name="Directive2" parent="Up" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+[node name="Directive2" parent="1/Up" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
 planet = NodePath("../../Right")
 cargo_types = Array[int]([0])
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(967, 551)
+[node name="FocusPoint0" type="Node2D" parent="1" groups=["focus_points"]]
+position = Vector2(896, 380)
+
+[node name="2" type="Node2D" parent="." groups=["focus_points"]]
+position = Vector2(3543, 470)
+
+[node name="Home" parent="2" instance=ExtResource("2_1bvp3")]
+position = Vector2(-857, 85)
+texture = ExtResource("6_5vw27")
+ship_count = 2
+
+[node name="Directive" parent="2/Home" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../1")
+
+[node name="1" parent="2" instance=ExtResource("2_1bvp3")]
+position = Vector2(-433, -16)
+texture = ExtResource("9_4c57u")
+radius = 120.0
+spawn_time = 10.0
+spawning_cargo_type = 1
+output_slots = 2
+
+[node name="Directive" parent="2/1" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../2")
+cargo_types = Array[int]([0])
+
+[node name="2" parent="2" instance=ExtResource("2_1bvp3")]
+position = Vector2(124, -20)
+texture = ExtResource("10_4c57u")
+radius = 120.0
+spawn_time = 20.0
+spawning_cargo_type = 2
+output_slots = 2
+consume_time = 20.0
+input_slots = Array[int]([0])
+
+[node name="Directive2" parent="2/2" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../3")
+cargo_types = Array[int]([0])
+
+[node name="Directive3" parent="2/2" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../1")
+
+[node name="Directive4" parent="2/2" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../Bottom")
+cargo_types = Array[int]([1])
+
+[node name="3" parent="2" instance=ExtResource("2_1bvp3")]
+position = Vector2(793, -6)
+texture = ExtResource("10_4c57u")
+radius = 60.0
+spawn_time = 30.0
+spawning_cargo_type = 2
+output_slots = 1
+consume_time = 30.0
+input_slots = Array[int]([0])
+
+[node name="Directive" parent="2/3" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../1")
+
+[node name="Directive3" parent="2/3" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../2")
+cargo_types = Array[int]([0])
+
+[node name="Directive2" parent="2/3" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../Bottom")
+cargo_types = Array[int]([1])
+
+[node name="Bottom" parent="2" instance=ExtResource("2_1bvp3")]
+position = Vector2(203, 348)
+texture = ExtResource("10_4c57u")
+radius = 60.0
+spawn_time = 30.0
+input_slots = Array[int]([1, 1])
+
+[node name="Directive" parent="2/Bottom" node_paths=PackedStringArray("planet") instance=ExtResource("6_kek77")]
+planet = NodePath("../../1")

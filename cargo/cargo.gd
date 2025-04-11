@@ -8,11 +8,26 @@ enum Type {
     Food
 }
 
+enum MaybeType {
+    Nothing,
+    Ore,
+    Fuel,
+    Food
+}
+
+static func maybe_type_to_type(maybe: MaybeType) -> Variant:
+    match maybe:
+        MaybeType.Ore: return Type.Ore
+        MaybeType.Fuel: return Type.Fuel
+        MaybeType.Food: return Type.Food
+
+    return null
+
 static func texture_for_type(cargo_type: Cargo.Type) -> Texture2D:
     match cargo_type:
         Type.Ore: return preload("res://cargo/metal.svg")
         Type.Fuel: return preload("res://cargo/energy.svg")
-        Type.Food: return preload("res://cargo/energy.svg")
+        Type.Food: return preload("res://cargo/food.svg")
 
     return preload("res://simple space/PNG/Retina/icon_crossSmall.png")
 
@@ -28,6 +43,8 @@ func _ready() -> void:
     scale = Vector2.ZERO
     tween.tween_property(self, "scale", original_scale * 1.2, .1)
     tween.tween_property(self, "scale", original_scale, .2)
+
+    texture = texture_for_type(type)
 
     # var timer = Timer.new()
     # timer.wait_time = decay_time

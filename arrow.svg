@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="10mm"
-   height="10mm"
-   viewBox="0 0 10 10"
+   width="8mm"
+   height="8mm"
+   viewBox="0 0 8 8"
    version="1.1"
    id="svg1"
    inkscape:version="1.4.1 (93de688d07, 2025-03-30)"
-   sodipodi:docname="metal.svg"
+   sodipodi:docname="arrow.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,30 +23,32 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     showgrid="false"
-     inkscape:zoom="8.0960718"
-     inkscape:cx="31.311481"
-     inkscape:cy="34.584674"
+     inkscape:zoom="22.899149"
+     inkscape:cx="5.2185345"
+     inkscape:cy="13.974318"
      inkscape:window-width="2510"
      inkscape:window-height="1364"
      inkscape:window-x="25"
      inkscape:window-y="51"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     showborder="false" />
   <defs
      id="defs1" />
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-0.68599271,-1.1993711)">
     <path
-       style="fill:#a5bac8;fill-opacity:1;stroke:#a5bac8;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-       d="M 4.1586982,7.6691253 8.2017564,3.7249442 7.2288416,2.3871639 4.9650231,2.2153334 1.7982663,5.2592641 1.8686697,7.2454132 Z"
+       style="fill:none;stroke:#ffffff;stroke-width:1.19999;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       d="M 5.0288142,3.236977 7.4923337,5.1735071 5.076108,7.1604455"
        id="path1"
-       sodipodi:nodetypes="ccccccc" />
+       sodipodi:nodetypes="ccc" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#d6dde0;stroke-width:0.999994;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-       d="M 4.7740088,4.6063713 6.6720245,2.6881508"
-       id="path2" />
+       style="fill:none;stroke:#ffffff;stroke-width:1.19999;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       d="M 7.307402,5.2002049 H 1.8613843"
+       id="path2"
+       sodipodi:nodetypes="cc" />
   </g>
 </svg>
