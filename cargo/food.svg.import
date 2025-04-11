@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8yaob70cb6oc"
-path="res://.godot/imported/energy.svg-5c3a9b0e23c64029e823f144117ac5c2.ctex"
+uid="uid://dc5fajst25duc"
+path="res://.godot/imported/food.svg-407fddcdb93a42701673cfb138df7a15.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://cargo/energy.svg"
-dest_files=["res://.godot/imported/energy.svg-5c3a9b0e23c64029e823f144117ac5c2.ctex"]
+source_file="res://cargo/food.svg"
+dest_files=["res://.godot/imported/food.svg-407fddcdb93a42701673cfb138df7a15.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

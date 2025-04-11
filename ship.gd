@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name Ship
+
 class State:
     pass
 
@@ -27,12 +29,12 @@ class Idle:
 
     func _init(new_target: Planet):
         self.target = new_target
-        self.drift_offset = Vector2.RIGHT.rotated(randf_range(-PI * .2, PI * .2)) * randf_range(10, 50)
+        self.drift_offset = Vector2.RIGHT.rotated(randf_range(0, PI * 2)) * randf_range(target.radius, target.radius + 60)
 
     func to_idle():
         return self
 
-@export
+const max_lifetime := 60.0
 var time_to_live: float
 var max_velocity = 150.0
 var min_speed = 0.0
@@ -44,7 +46,7 @@ var state: State
 var cargo: Cargo
 
 func _ready() -> void:
-    time_to_live = time_to_live + randf() * 10
+    time_to_live += randf_range(-10, 10)
     var timer = Timer.new()
     timer.wait_time = time_to_live
     timer.one_shot = true
@@ -70,27 +72,26 @@ func _process(delta: float) -> void:
             if !is_instance_valid(state.target):
                 return
 
-        if global_position.distance_to(target_position(state.target)) < 5:
-            check_target()
-
     if state is Idle:
         state.check_cooldown -= delta
-        # TODO can't drift like this forever
-        state.drift_offset += state.drift_offset.normalized() * 5 * delta
         if state.check_cooldown <= 0:
             state.check_cooldown = state.check_interval
             check_target()
 
     if state is Moving or state is Idle:
         var to_target
+        var distance_to_target
         if state is Moving:
             to_target = target_position(state.target) - global_position
+            distance_to_target = to_target.length() - state.target.radius
+
+            if distance_to_target < 5:
+                check_target()
         elif state is Idle:
             var target_global_position = target_position(state.target)
-            var target_position_angle = state.target.global_position.angle_to_point(target_global_position)
-            to_target = target_global_position + state.drift_offset.rotated(target_position_angle) - global_position
+            to_target = target_global_position + state.drift_offset - global_position
+            distance_to_target = to_target.length()
 
-        var distance_to_target = to_target.length()
 
         var target_rotation = to_target.angle() + PI / 2
         var rotation_strength = abs(angle_difference(target_rotation, global_rotation)) * 4
@@ -111,10 +112,7 @@ func _process(delta: float) -> void:
         cargo.global_target_position = $CargoHold.global_position
 
 func target_position(target: Planet) -> Vector2:
-    if cargo == null and len(target.output_slots) > 0:
-        return target.to_global(target.output_dock_position())
-    else:
-        return target.to_global(target.input_dock_position())
+    return target.global_position
 
 func check_target() -> void:
     if state is not Moving and state is not Idle:
