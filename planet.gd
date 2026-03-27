@@ -34,7 +34,7 @@ var current_inputs: Array[Cargo] = []
 const slot_size := 35.0
 
 @onready
-var directives: Array[Directive] = child_directives()
+var available_directives: Array[Directive] = []
 @onready
 var arrow_width = $"Arrow".texture.get_size().x * $"Arrow".scale.x
 
@@ -61,7 +61,7 @@ func _ready() -> void:
             add_child(output_indicator)
     else:
         if output_slots > 0:
-            push_error(self, " has ", output_slots, " output slots but cargo type is not set")
+            push_error(self , " has ", output_slots, " output slots but cargo type is not set")
 
     if input_slots.is_empty() and output_slots == 0:
         $Arrow.hide()
@@ -96,16 +96,16 @@ func _process(delta: float) -> void:
     if current_spawn_time <= 0.0:
         spawn_output()
         current_spawn_time = spawn_time
-    
 
-func child_directives() -> Array[Directive]:
-    var result: Array[Directive] = []
-    for child in get_children():
-        var directive := child as Directive
-        if directive != null:
-            result.append(directive)
+func _unhandled_input(event: InputEvent):
+    if event is not InputEventMouseButton or not event.is_released():
+        return
 
-    return result
+    var camera = get_viewport().get_camera_2d()
+    if camera.get_global_mouse_position().distance_to(self.global_position) > self.radius:
+        return
+
+    DirectiveCreator.click_planet(self )
 
 func output_slot_position(i: int) -> Vector2:
     var mid = (output_slots - 1) * .5
@@ -147,7 +147,7 @@ func random_transportable_output() -> Cargo:
     var available_outputs = current_outputs.filter(func(o):
         if o == null:
             return false
-        var directive_available = directives.any(func(d): return d.includes_cargo_type(o.type))
+        var directive_available = available_directives.any(func(d): return d.includes_cargo_type(o.type))
         return directive_available
     )
 
@@ -190,15 +190,15 @@ func spawn_ship(time_to_live: float) -> void:
     ship.check_target()
 
 func random_target() -> Planet:
-    if len(directives) == 0:
+    if available_directives.is_empty():
         return null
 
-    return directives.pick_random().planet
+    return available_directives.pick_random().state.planet
 
 func target_for_cargo(type: Cargo.Type) -> Planet:
-    var available = directives.filter(func(d: Directive): return d.includes_cargo_type(type))
-    if !available.is_empty():
-        return available.pick_random().planet
+    var for_cargo = available_directives.filter(func(d: Directive): return d.includes_cargo_type(type))
+    if !for_cargo.is_empty():
+        return for_cargo.pick_random().planet
 
     return null
 

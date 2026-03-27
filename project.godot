@@ -19,6 +19,10 @@ run/main_scene="uid://c53jdqfk7w18k"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+DirectiveCreator="*uid://b56n17b0ih7hy"
+
 [display]
 
 window/size/viewport_width=1920

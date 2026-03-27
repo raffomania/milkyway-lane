@@ -57,7 +57,7 @@ func _ready() -> void:
     var original_scale = scale
     scale.x = 0
     var t = create_tween()
-    t.tween_property(self, "scale", original_scale, 0.5)
+    t.tween_property(self , "scale", original_scale, 0.5)
 
 func _process(delta: float) -> void:
     if state is Dead:
@@ -159,6 +159,6 @@ func die_slowly() -> void:
     state.death_direction = Vector2.UP.rotated(rotation)
     state.death_rotation = randf_range(-.2, .2)
     var tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-    tween.tween_property(self, "modulate", Color(.4, .4, .4, 1), 5.0)
-    tween.parallel().tween_property(self, "velocity", randf() * 10, 5.0)
-    tween.parallel().tween_property(self, "rotation", state.death_rotation * 4, 5.0)
+    tween.tween_property(self , "modulate", Color(.4, .4, .4, 1), 5.0)
+    tween.parallel().tween_property(self , "velocity", randf() * 10, 5.0)
+    tween.parallel().tween_property(self , "rotation", state.death_rotation * 4, 5.0)
