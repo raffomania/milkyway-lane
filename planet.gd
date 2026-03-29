@@ -198,7 +198,7 @@ func random_target() -> Planet:
 func target_for_cargo(type: Cargo.Type) -> Planet:
     var for_cargo = available_directives.filter(func(d: Directive): return d.includes_cargo_type(type))
     if !for_cargo.is_empty():
-        return for_cargo.pick_random().planet
+        return for_cargo.pick_random().state.planet
 
     return null
 

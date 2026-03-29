@@ -34,6 +34,11 @@ func assign_target_planet(target: Planet):
     var angle_to_target = to_local(target.global_position).angle()
     var end_position = target.global_position + Vector2.LEFT.rotated(angle_to_target + PI * .03) * (target.radius)
 
+    cargo_types = target.input_slots.filter(func(target_type):
+        var parent_output = Cargo.maybe_type_to_type(parent.spawning_cargo_type)
+        return parent_output == target_type
+    )
+
     update_curve(end_position)
     spawn_cargo_type_children(state)
 
