@@ -23,7 +23,13 @@ var spawning_cargo_type: Cargo.MaybeType
 @export
 var output_slots: int = 0
 @export
-var ship_count: int = 0
+var ship_count: int = 0:
+    set(val):
+        if val > ship_count:
+            spawn_ship(Ship.max_lifetime)
+        ship_count = val
+        _ship_timer.wait_time = Ship.max_lifetime / ship_count
+
 @export_group("input")
 @export
 var consume_time := 10.0
@@ -40,6 +46,8 @@ var arrow_width = $"Arrow".texture.get_size().x * $"Arrow".scale.x
 
 var current_outputs: Array[Cargo] = []
 var current_spawn_time := spawn_time
+
+var _ship_timer := Timer.new()
 
 func _ready() -> void:
     add_to_group("planets")
@@ -67,11 +75,10 @@ func _ready() -> void:
         $Arrow.hide()
 
     if ship_count > 0:
-        var ship_timer = Timer.new()
-        ship_timer.wait_time = Ship.max_lifetime / ship_count
-        ship_timer.timeout.connect(func(): self.spawn_ship(Ship.max_lifetime))
-        add_child(ship_timer)
-        ship_timer.start()
+        _ship_timer.wait_time = Ship.max_lifetime / ship_count
+        _ship_timer.timeout.connect(func(): self.spawn_ship(Ship.max_lifetime))
+        add_child(_ship_timer)
+        _ship_timer.start()
 
     var consume_timer = Timer.new()
     consume_timer.wait_time = consume_time

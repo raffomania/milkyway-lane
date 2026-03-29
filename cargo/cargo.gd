@@ -23,6 +23,15 @@ static func maybe_type_to_type(maybe: MaybeType) -> Variant:
 
     return null
 
+static func type_to_maybe_type(value: Type) -> MaybeType:
+    match value:
+        Type.Ore: return MaybeType.Ore
+        Type.Fuel: return MaybeType.Fuel
+        Type.Food: return MaybeType.Food
+        _:
+            push_error("Invalid cargo type", value)
+            return MaybeType.Nothing
+
 static func texture_for_type(cargo_type: Cargo.Type) -> Texture2D:
     match cargo_type:
         Type.Ore: return preload("res://cargo/metal.svg")
@@ -30,6 +39,12 @@ static func texture_for_type(cargo_type: Cargo.Type) -> Texture2D:
         Type.Food: return preload("res://cargo/food.svg")
 
     return preload("res://simple space/PNG/Retina/icon_crossSmall.png")
+
+static func random_type() -> Type:
+    return Type.values().pick_random()
+
+static func random_maybe_type() -> MaybeType:
+    return MaybeType.values().pick_random()
 
 signal removed(cargo: Cargo)
 
@@ -41,8 +56,8 @@ func _ready() -> void:
     var tween = create_tween()
     var original_scale = Vector2(scale)
     scale = Vector2.ZERO
-    tween.tween_property(self, "scale", original_scale * 1.2, .1)
-    tween.tween_property(self, "scale", original_scale, .2)
+    tween.tween_property(self , "scale", original_scale * 1.2, .1)
+    tween.tween_property(self , "scale", original_scale, .2)
 
     texture = texture_for_type(type)
 
@@ -63,8 +78,8 @@ func _process(delta: float) -> void:
 
 func remove() -> void:
     var tween = create_tween()
-    tween.tween_property(self, "scale", scale * 1.2, .2)
-    tween.tween_property(self, "scale", Vector2.ZERO, .1)
+    tween.tween_property(self , "scale", scale * 1.2, .2)
+    tween.tween_property(self , "scale", Vector2.ZERO, .1)
     await tween.finished
-    removed.emit(self)
+    removed.emit(self )
     queue_free()
