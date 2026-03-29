@@ -7,9 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://10givwqxoynk" path="res://planets/Planets/planet02.png" id="3_1bvp3"]
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
 [ext_resource type="Texture2D" uid="uid://buc60npxar7i1" path="res://planets/Planets/planet05.png" id="6_5vw27"]
-[ext_resource type="Texture2D" uid="uid://b0sikip16xeqr" path="res://planets/Planets/planet07.png" id="9_4c57u"]
-[ext_resource type="Script" uid="uid://dd8i53wevqfkc" path="res://camera.gd" id="9_kek77"]
-[ext_resource type="Texture2D" uid="uid://wy4wmhkekdwm" path="res://planets/Planets/planet04.png" id="10_4c57u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_efxa6"]
 shader = ExtResource("2_4c57u")
@@ -47,7 +44,6 @@ grow_vertical = 2
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=943887551]
 position = Vector2(913, 382)
-script = ExtResource("9_kek77")
 
 [node name="Grid" type="ColorRect" parent="Camera2D" unique_id=1104666648]
 material = SubResource("ShaderMaterial_7mycd")
@@ -95,46 +91,3 @@ input_slots = Array[int]([0, 1])
 
 [node name="FocusPoint0" type="Node2D" parent="1" unique_id=672533803 groups=["focus_points"]]
 position = Vector2(896, 380)
-
-[node name="2" type="Node2D" parent="." unique_id=284066717 groups=["focus_points"]]
-position = Vector2(3543, 470)
-
-[node name="Home" parent="2" unique_id=1742142872 instance=ExtResource("2_1bvp3")]
-position = Vector2(-857, 85)
-texture = ExtResource("6_5vw27")
-ship_count = 2
-
-[node name="1" parent="2" unique_id=905579105 instance=ExtResource("2_1bvp3")]
-position = Vector2(-433, -16)
-texture = ExtResource("9_4c57u")
-radius = 120.0
-spawn_time = 10.0
-spawning_cargo_type = 1
-output_slots = 2
-
-[node name="2" parent="2" unique_id=2129984857 instance=ExtResource("2_1bvp3")]
-position = Vector2(124, -20)
-texture = ExtResource("10_4c57u")
-radius = 120.0
-spawn_time = 20.0
-spawning_cargo_type = 2
-output_slots = 2
-consume_time = 20.0
-input_slots = Array[int]([0])
-
-[node name="3" parent="2" unique_id=203852549 instance=ExtResource("2_1bvp3")]
-position = Vector2(793, -6)
-texture = ExtResource("10_4c57u")
-radius = 60.0
-spawn_time = 30.0
-spawning_cargo_type = 2
-output_slots = 1
-consume_time = 30.0
-input_slots = Array[int]([0])
-
-[node name="Bottom" parent="2" unique_id=1618015503 instance=ExtResource("2_1bvp3")]
-position = Vector2(203, 348)
-texture = ExtResource("10_4c57u")
-radius = 60.0
-spawn_time = 30.0
-input_slots = Array[int]([1, 1])
