@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://c5vuvvjpvcqi5" path="res://chromatic_aberration.gdshader" id="2_4c57u"]
 [ext_resource type="Texture2D" uid="uid://dppbwfk7t7dfr" path="res://planets/Planets/planet00.png" id="2_5vw27"]
 [ext_resource type="Texture2D" uid="uid://10givwqxoynk" path="res://planets/Planets/planet02.png" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://bbntj6knp1x6t" path="res://bar.gd" id="4_5vw27"]
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
 [ext_resource type="Texture2D" uid="uid://buc60npxar7i1" path="res://planets/Planets/planet05.png" id="6_5vw27"]
 
@@ -24,7 +25,13 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="Main" type="Node2D" unique_id=1564123423]
+[node name="Main" type="Control" unique_id=1444664016]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="DirectiveCreator" type="Node" parent="." unique_id=1125313337]
 script = ExtResource("1_efxa6")
@@ -32,6 +39,7 @@ script = ExtResource("1_efxa6")
 [node name="Aberration" type="ColorRect" parent="." unique_id=2006634362]
 visible = false
 material = SubResource("ShaderMaterial_efxa6")
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -42,8 +50,30 @@ offset_bottom = 1104.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1110705290]
+
+[node name="UI" type="MarginContainer" parent="UILayer" unique_id=1122698429]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UILayer/UI" unique_id=1251631242]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Bar" type="Control" parent="UILayer/UI/HBoxContainer" unique_id=363852775]
+layout_mode = 2
+size_flags_horizontal = 8
+script = ExtResource("4_5vw27")
+
 [node name="Camera2D" type="Camera2D" parent="." unique_id=943887551]
-position = Vector2(913, 382)
+position = Vector2(1072, 683)
 
 [node name="Grid" type="ColorRect" parent="Camera2D" unique_id=1104666648]
 material = SubResource("ShaderMaterial_7mycd")
