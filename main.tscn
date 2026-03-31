@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dppbwfk7t7dfr" path="res://planets/Planets/planet00.png" id="2_5vw27"]
 [ext_resource type="Script" uid="uid://p622gq6leacy" path="res://planet_spawner.gd" id="2_kek77"]
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://tdjyi4ocrd7w" path="res://camera_2d.gd" id="7_5vw27"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_efxa6"]
 shader = ExtResource("2_4c57u")
@@ -14,16 +15,18 @@ shader_parameter/spread = 0.001
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
 shader = ExtResource("5_lquwl")
-shader_parameter/cell_size = 20.0
-shader_parameter/dot_size = 0.25
+shader_parameter/cell_size = 40.0
+shader_parameter/dot_size = 0.250000011875
 shader_parameter/background_color = Color(0.117647, 0.117647, 0.117647, 0)
 shader_parameter/dot_color = Color(0.2156, 0.2156, 0.2156, 1)
-shader_parameter/resolution = Vector2(1920, 1080)
+shader_parameter/resolution = Vector2(1855, 1025)
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/anti_aliasing_factor = 0.01
 shader_parameter/stochastic_samples = 16
 
-[node name="Main" type="Node2D" unique_id=1564123423]
+[sub_resource type="CanvasTexture" id="CanvasTexture_5vw27"]
+
+[node name="Main" type="Node" unique_id=2025943580]
 
 [node name="DirectiveCreator" type="Node" parent="." unique_id=1125313337]
 script = ExtResource("1_efxa6")
@@ -43,19 +46,13 @@ offset_right = 1943.0
 offset_bottom = 1104.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="Grid" type="ColorRect" parent="." unique_id=1104666648]
-material = SubResource("ShaderMaterial_7mycd")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -12.0
-offset_top = -18.0
-offset_right = 1935.0
-offset_bottom = 1080.0
-grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
+
+[node name="Grid" type="Sprite2D" parent="." unique_id=982956971]
+material = SubResource("ShaderMaterial_7mycd")
+position = Vector2(971.5, 539.5)
+scale = Vector2(1855, 1025)
+texture = SubResource("CanvasTexture_5vw27")
 
 [node name="1" type="Node2D" parent="." unique_id=750622250]
 
@@ -67,3 +64,5 @@ ship_count = 3
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=943887551]
 position = Vector2(960, 540)
+script = ExtResource("7_5vw27")
+

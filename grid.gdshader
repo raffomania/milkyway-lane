@@ -15,7 +15,7 @@ float random(vec2 st){
 }
 
 void fragment() {
-    vec2 uv = FRAGCOORD.xy / resolution;
+    vec2 uv = UV.xy;
     vec4 finalColor = vec4(0.0);
 
     for (int i = 0; i < stochastic_samples; ++i) {
