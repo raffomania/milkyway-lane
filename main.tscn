@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://p622gq6leacy" path="res://planet_spawner.gd" id="2_kek77"]
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://tdjyi4ocrd7w" path="res://camera_2d.gd" id="7_5vw27"]
+[ext_resource type="Script" uid="uid://bbntj6knp1x6t" path="res://bar.gd" id="7_272bh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_efxa6"]
 shader = ExtResource("2_4c57u")
@@ -62,7 +63,23 @@ texture = ExtResource("2_5vw27")
 radius = 70.0
 ship_count = 3
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1152751545]
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1701388863]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer" unique_id=816663805]
+layout_mode = 2
+
+[node name="Bar" type="Control" parent="CanvasLayer/MarginContainer/HBoxContainer" unique_id=567357676]
+layout_mode = 2
+script = ExtResource("7_272bh")
+
 [node name="Camera2D" type="Camera2D" parent="." unique_id=943887551]
 position = Vector2(960, 540)
+editor_draw_screen = false
 script = ExtResource("7_5vw27")
-
