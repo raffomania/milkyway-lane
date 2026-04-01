@@ -105,7 +105,7 @@ func _process(delta: float) -> void:
         current_spawn_time = spawn_time
 
 func _unhandled_input(event: InputEvent):
-    if event is not InputEventMouseButton or not event.is_released():
+    if event is not InputEventMouseButton or not event.is_action_released("left_click"):
         return
 
     var camera = get_viewport().get_camera_2d()
