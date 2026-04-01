@@ -104,16 +104,6 @@ func _process(delta: float) -> void:
         spawn_output()
         current_spawn_time = spawn_time
 
-func _unhandled_input(event: InputEvent):
-    if event is not InputEventMouseButton or not event.is_action_released("left_click"):
-        return
-
-    var camera = get_viewport().get_camera_2d()
-    if camera.get_global_mouse_position().distance_to(self.global_position) > self.radius:
-        return
-
-    DirectiveCreator.click_planet(self )
-
 func output_slot_position(i: int) -> Vector2:
     var mid = (output_slots - 1) * .5
     return Vector2((arrow_width + slot_size) / 2, slot_size * (mid - i))
