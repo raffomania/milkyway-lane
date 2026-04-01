@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://c5vuvvjpvcqi5" path="res://chromatic_aberration.gdshader" id="2_4c57u"]
 [ext_resource type="Texture2D" uid="uid://dppbwfk7t7dfr" path="res://planets/Planets/planet00.png" id="2_5vw27"]
 [ext_resource type="Script" uid="uid://p622gq6leacy" path="res://planet_spawner.gd" id="2_kek77"]
+[ext_resource type="Script" uid="uid://bsmxunk42h4aa" path="res://grid.gd" id="5_kek77"]
 [ext_resource type="Shader" uid="uid://d21atk7obnr3w" path="res://grid.gdshader" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://tdjyi4ocrd7w" path="res://camera_2d.gd" id="7_5vw27"]
 [ext_resource type="Script" uid="uid://bbntj6knp1x6t" path="res://bar.gd" id="7_272bh"]
@@ -54,6 +55,7 @@ material = SubResource("ShaderMaterial_7mycd")
 position = Vector2(971.5, 539.5)
 scale = Vector2(1855, 1025)
 texture = SubResource("CanvasTexture_5vw27")
+script = ExtResource("5_kek77")
 
 [node name="1" type="Node2D" parent="." unique_id=750622250]
 
